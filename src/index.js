@@ -1,9 +1,9 @@
 require('dotenv').config()
-// const bodyParser = require('body-parser')
 const connectDB = require('./db/connectDB')
 const express = require('express')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
+const corsOption = require('../src/middlewares/corsMiddleware')
 const app = express()
 
 
@@ -13,9 +13,10 @@ app.use(express.json())                       //to use json methods
 
 app.use(express.static("public"))             //to make public folder static
 app.use(cookieParser())
-app.use(cors({
-    origin:process.env.CORS_ORIGIN,
-}))
+app.use(cors(corsOption))
+// app.use(cors({
+//     origin:process.env.CORS_ORIGIN,
+// }))
 
 
 //routes
