@@ -22,9 +22,9 @@ app.use(cors({
 const userAPI = require('./routes/userRoutes')
 const blogAPI = require('./routes/blogRoutes')
 
-// app.get('/say',(req,res)=>{
-//     res.send("It works...")
-// })
+app.get('/',(req,res)=>{
+    res.send("It works...")
+})
 app.use('/api/user',userAPI)
 app.use('/api/blogs',blogAPI)
 
