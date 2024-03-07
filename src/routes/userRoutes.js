@@ -18,7 +18,7 @@ const {
 router.post("/register", upload.single('profilePic'), registerUser)
 
 //get all users
-router.get('/getUsers',getAllUsers)
+router.get('/getUsers',getAllUsers) 
 
 //login
 router.post("/login", loginUser)
