@@ -22,7 +22,7 @@ app.use(cors({
 //routes
 const userAPI = require('./routes/userRoutes')
 const blogAPI = require('./routes/blogRoutes')
-
+ 
 app.get('/',(req,res)=>{
     res.send("It works...")
 })
@@ -30,7 +30,8 @@ app.use('/api/user',userAPI)
 app.use('/api/blogs',blogAPI)
 
 
-connectDB()
+const connectFunction = async()=>{
+    await connectDB()
     .then(()=>{
         app.listen(process.env.PORT || 8000,()=>{
             console.log(`Server initiated at ${process.env.PORT}`);
@@ -42,3 +43,6 @@ connectDB()
     .catch((err)=>{
         console.log(err);
     })
+}
+
+connectFunction()
