@@ -48,6 +48,9 @@ const getProfile = async(req, res)=>{
     try {
         const user = await User.findById(req.params.id)
         // const user = await User.findById(req.id)
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
         res.status(200).json(user);
         
     } catch (error) {
