@@ -41,8 +41,6 @@ const registerUser = async (req, res) => {
     }
 }
 
-
-
 const getProfile = async(req, res)=>{
     
     try {
@@ -95,22 +93,27 @@ const updateUser = async (req, res) => {
         }, {new: true})
         res.status(200).json("updated user")
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ error: error.message });
     }
 }
 
 const updateProfilePic = async(req,res)=>{
     const profilePicPath = req.file?.path;
+    console.log(profilePicPath);
+    
     const fileUploaded = await uploadOnCloudinary(profilePicPath);
+    console.log(fileUploaded.url);
+    
     try {
-        await User.findByIdAndUpdate(req.params.id, {
+        const r = await User.findByIdAndUpdate(req.params.id, {
             $set: {
                 profilePic:fileUploaded?.url || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
             }
         }, {new: true})
+        
         res.status(200).json("updated profle pic")
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ error: error.message });
     }
 }
 

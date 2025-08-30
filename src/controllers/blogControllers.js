@@ -14,7 +14,7 @@ const addBlog = async (req, res) => {
             title: req.body.title,
             content: req.body.content,
             author: req.body.author,
-            caption:req.body.caption,
+            caption: req.body.caption,
             blogImage: fileUploaded?.url || "https://cdn.pixabay.com/photo/2016/07/30/19/47/banner-1557834_1280.jpg",
             tags: req.body.tags
         });
@@ -58,8 +58,8 @@ const showSingleBlog = async (req, res) => {
 };
 
 // Update a blog post by ID
-const updateBlog = async (req, res) => { 
-    
+const updateBlog = async (req, res) => {
+
     try {
         await Blog.findByIdAndUpdate(req.params.id, {
             $set: req.body
@@ -71,14 +71,14 @@ const updateBlog = async (req, res) => {
     }
 };
 
-const updateBlogImage = async(req,res)=>{
+const updateBlogImage = async (req, res) => {
     const blogImagePath = req.file?.path;
-        // console.log(req.file);
+    // console.log(req.file);
     const fileUploaded = await uploadOnCloudinary(blogImagePath);
     try {
         await Blog.findByIdAndUpdate(req.params.id, {
             $set: {
-                blogImage:fileUploaded?.url || "https://cdn.pixabay.com/photo/2016/07/30/19/47/banner-1557834_1280.jpg"
+                blogImage: fileUploaded?.url || "https://cdn.pixabay.com/photo/2016/07/30/19/47/banner-1557834_1280.jpg"
             }
         }, { new: true })
         // console.log(req.body);
@@ -86,7 +86,7 @@ const updateBlogImage = async(req,res)=>{
     } catch (error) {
         res.status(500).json({ message: error.message });
 
-        
+
     }
 }
 
@@ -94,7 +94,17 @@ const updateBlogImage = async(req,res)=>{
 //delete Blogs
 const deleteBlog = async (req, res) => {
     try {
-        await Blog.findByIdAndDelete(req.params.id)
+        const blogId = req.params.id;
+        const blog = await Blog.findById(blogId);
+        if (!blog) {
+            return res.status(404).json({ message: "Blog not found" });
+        }
+        const userId = blog.author;  
+        await Blog.findByIdAndDelete(blogId);
+        await User.findByIdAndUpdate(
+            userId,
+            { $pull: { posts: blogId } }  // Remove the blogId from posts array
+        );
         res.status(200).json("Blog Deleted")
     } catch (error) {
         res.status(500).json({ message: error.message });
